@@ -57,7 +57,7 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
     if ('validatorUrl' in opts.swaggerOptions) {
       // Validator URL specified explicitly
       this.model.validatorUrl = opts.swaggerOptions.validatorUrl;
-    } else if (this.model.url.indexOf('localhost') > 0) {
+    } else if (isPrivateHost(document.location.hostname)) {
       // Localhost override
       this.model.validatorUrl = null;
     } else {
@@ -68,6 +68,20 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
       else {
         this.model.validatorUrl = 'http://online.swagger.io/validator';
       }
+    }
+
+    function isPrivateHost(addr) {
+      return /^10\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/.test(addr) ||
+        /^192\.168\.([0-9]{1,3})\.([0-9]{1,3})/.test(addr) ||
+        /^172\.(1[6-9]|2\d|30|31)\.([0-9]{1,3})\.([0-9]{1,3})/.test(addr) ||
+        /^127\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/.test(addr) ||
+        /^169\.254\.([0-9]{1,3})\.([0-9]{1,3})/.test(addr) ||
+        /^fc00:/.test(addr) ||
+        /^fe80:/.test(addr) ||
+        /^::1$/.test(addr) ||
+        /^::$/.test(addr) ||
+        /localhost/.test(addr) ||
+        /0\.0\.0\.0/.test(addr);
     }
   },
 
